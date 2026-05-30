@@ -1,0 +1,258 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
+             xmlns:vm="using:WMSApp.ViewModels"
+             xmlns:dto="using:WMSApp.DTO"
+             mc:Ignorable="d"
+             d:DesignHeight="914"
+             d:DesignWidth="411"
+             HorizontalContentAlignment="Stretch"
+             VerticalContentAlignment="Stretch"
+             x:Class="WMSApp.Views.EntryCodeView"
+             x:DataType="vm:EntryCodeViewModel">
+    <Design.DataContext>
+        <vm:EntryCodeViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
+        <Grid Grid.Row="0" ColumnDefinitions="Auto, *">
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Margin="10,0"
+                       Text="库位号："
+                       Classes="Tertiary"
+                       FontSize="17" />
+            <TextBox x:Name="BinBox"
+                     Grid.Column="1"
+                     Margin="0,0,8,0"
+                     Text="{Binding InputBinNo}"
+                     KeyDown="BinBox_OnKeyDown"
+                     Watermark="请输入库位号（例：L005A1001）" />
+        </Grid>
+
+        <Grid Grid.Row="1" ColumnDefinitions="Auto, *">
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Margin="10,0"
+                       Text="所属料架："
+                       Classes="Tertiary"
+                       FontSize="17" />
+            <TextBox Grid.Column="1"
+                     Margin="0,0,8,0"
+                     Text="{Binding ResolvedShelfNo}"
+                     IsReadOnly="True"
+                     IsEnabled="False"
+                     Watermark="系统自动识别料架" />
+        </Grid>
+
+        <Grid Grid.Row="2" ColumnDefinitions="Auto, *">
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Margin="10,0"
+                       Text="二维码："
+                       Classes="Tertiary"
+                       FontSize="17" />
+            <TextBox x:Name="CodeBox"
+                     Grid.Column="1"
+                     Margin="0,0,8,0"
+                     Text="{Binding InputCode}"
+                     KeyDown="CodeBox_OnKeyDown"
+                     IsEnabled="{Binding CanInputNewCode}"
+                     Watermark="请输入大箱码或条形码" />
+        </Grid>
+
+        <Grid Grid.Row="3" ColumnDefinitions="Auto, *, Auto" IsVisible="{Binding IsWaitingConfirm}">
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Margin="10,0"
+                       Text="确认库位："
+                       Classes="Tertiary"
+                       FontSize="17" />
+            <TextBox x:Name="ConfirmBinBox"
+                     Grid.Column="1"
+                     Margin="0,0,8,0"
+                     Text="{Binding ConfirmBinNo}"
+                     KeyDown="ConfirmBinBox_OnKeyDown"
+                     Watermark="请扫描库位号确认入库" />
+            <Button Grid.Column="2"
+                    Margin="0,0,8,0"
+                    Content="取消"
+                    Classes="Danger"
+                    Command="{Binding CancelOperationCommand}"
+                    Theme="{StaticResource SolidButton}"
+                    AutomationProperties.AccessibilityView="Raw" />
+        </Grid>
+
+        <Grid Grid.Row="4" HorizontalAlignment="Right" ColumnDefinitions="Auto,Auto" Margin="8">
+            <Button Grid.Column="0"
+                    Margin="0,0,8,0"
+                    Classes="Warning"
+                    Content="分配并亮灯库位"
+                    Command="{Binding LightShelfCommand}"
+                    IsEnabled="{Binding CanInputNewCode}"
+                    Theme="{StaticResource SolidButton}"
+                    AutomationProperties.AccessibilityView="Raw" />
+            <Button Grid.Column="1"
+                    Margin="0,0,8,0"
+                    Classes="Success"
+                    Content="确认入库"
+                    Command="{Binding ConfirmAndStoreCommand}"
+                    IsEnabled="{Binding IsWaitingConfirm}"
+                    Theme="{StaticResource SolidButton}"
+                    AutomationProperties.AccessibilityView="Raw" />
+        </Grid>
+
+        <Grid Grid.Row="5" Margin="8,0">
+            <Border IsVisible="{Binding HasMessage}"
+                    Padding="10,8"
+                    Theme="{DynamicResource CardBorder}">
+                <TextBlock Text="{Binding StatusDisplayText}"
+                           TextWrapping="Wrap"
+                           Classes="Tertiary" />
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="6" ColumnDefinitions="*">
+            <WrapPanel Grid.Column="0" ItemSpacing="4" Margin="10,0">
+                <Label Classes="Solid Grey" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}"
+                                                    CommandParameter="Grey" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    熄灯
+                </Label>
+                <Label Classes="Solid Red" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}"
+                                                    CommandParameter="Red" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    红色
+                </Label>
+                <Label Classes="Solid Green" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}"
+                                                    CommandParameter="Green" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    绿色
+                </Label>
+                <Label Classes="Solid Blue" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}"
+                                                    CommandParameter="Blue" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    蓝色
+                </Label>
+                <Label Classes="Solid Yellow" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}"
+                                                    CommandParameter="Yellow" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    黄色
+                </Label>
+                <Label Classes="Solid Pink" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}"
+                                                    CommandParameter="Pink" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    洋红
+                </Label>
+                <Label Classes="Solid Cyan" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}"
+                                                    CommandParameter="Cyan" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    青色
+                </Label>
+                <Label Classes="Solid White" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}"
+                                                    CommandParameter="White" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    白色
+                </Label>
+            </WrapPanel>
+        </Grid>
+
+        <DataGrid Grid.Row="7"
+                  Margin="20"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True"
+                  HeadersVisibility="All"
+                  IsReadOnly="True"
+                  ItemsSource="{Binding GridData}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="3*" x:DataType="dto:PalletBarRelation" Header="托盘码">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="dto:PalletBarRelation">
+                            <SelectableTextBlock Margin="12,0"
+                                                 VerticalAlignment="Center"
+                                                 Text="{Binding PalletNo}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="2*" x:DataType="dto:PalletBarRelation" Header="条码">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="dto:PalletBarRelation">
+                            <SelectableTextBlock Margin="12,0"
+                                                 VerticalAlignment="Center"
+                                                 Text="{Binding BarNo}"
+                                                 TextWrapping="Wrap" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="2*" x:DataType="dto:PalletBarRelation" Header="料架">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="dto:PalletBarRelation">
+                            <SelectableTextBlock Margin="12,0"
+                                                 VerticalAlignment="Center"
+                                                 Text="{Binding ShelfNo}"
+                                                 TextWrapping="Wrap" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="3*" x:DataType="dto:PalletBarRelation" Header="库位">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="dto:PalletBarRelation">
+                            <SelectableTextBlock Margin="12,0"
+                                                 VerticalAlignment="Center"
+                                                 Text="{Binding BinNo}"
+                                                 TextWrapping="Wrap" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="2*" x:DataType="dto:PalletBarRelation" Header="亮灯">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="dto:PalletBarRelation">
+                            <Button Content="亮灯"
+                                    Classes="Warning"
+                                    Command="{Binding DataContext.LightOneCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding BinNo}"
+                                    Theme="{StaticResource OutlineButton}"
+                                    AutomationProperties.AccessibilityView="Raw" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

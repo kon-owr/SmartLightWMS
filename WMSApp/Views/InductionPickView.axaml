@@ -1,0 +1,179 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
+             xmlns:vm="using:WMSApp.ViewModels"
+             xmlns:dto="using:WMSApp.DTO"
+             mc:Ignorable="d"
+             d:DesignHeight="914"
+             d:DesignWidth="411"
+             HorizontalContentAlignment="Stretch"
+             VerticalContentAlignment="Stretch"
+             x:Class="WMSApp.Views.InductionPickView"
+             x:DataType="vm:InductionPickViewModel">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto,Auto,Auto" Margin="8">
+            <TextBox x:Name="ItemNoBox"
+                     Grid.Column="0"
+                     Margin="0,0,8,0"
+                     Text="{Binding SearchItemNo, UpdateSourceTrigger=PropertyChanged}"
+                     KeyDown="ItemNoBox_OnKeyDown"
+                     Watermark="请输入料号" />
+            <TextBox x:Name="QtyBox"
+                     Grid.Column="1"
+                     Width="80"
+                     Margin="0,0,8,0"
+                     Text="{Binding RequiredQtyText}"
+                     KeyDown="QtyBox_OnKeyDown"
+                     Watermark="数量" />
+            <Button Grid.Column="2"
+                    Margin="0,0,8,0"
+                    Content="查询"
+                    Classes="Secondary"
+                    Command="{Binding SearchCommand}"
+                    Theme="{StaticResource SolidButton}"
+                    AutomationProperties.AccessibilityView="Raw" />
+            <Button Grid.Column="3"
+                    Margin="0,0,8,0"
+                    Content="开始拣货"
+                    Classes="Success"
+                    Command="{Binding StartPickCommand}"
+                    IsEnabled="{Binding CanStartPick}"
+                    Theme="{StaticResource SolidButton}"
+                    AutomationProperties.AccessibilityView="Raw" />
+            <Button Grid.Column="4"
+                    Content="取消"
+                    Classes="Danger"
+                    Command="{Binding CancelPickCommand}"
+                    IsEnabled="{Binding CanCancelPick}"
+                    Theme="{StaticResource SolidButton}"
+                    AutomationProperties.AccessibilityView="Raw" />
+        </Grid>
+
+        <Border Grid.Row="1"
+                Margin="8,0"
+                Padding="4"
+                IsVisible="{Binding HasSuggestions}"
+                Theme="{DynamicResource CardBorder}">
+            <ListBox x:Name="SuggestionList"
+                     MaxHeight="180"
+                     ItemsSource="{Binding ItemSuggestions}"
+                     SelectionChanged="SuggestionList_OnSelectionChanged" />
+        </Border>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*">
+            <WrapPanel Grid.Column="0" ItemSpacing="4" Margin="10,0">
+                <Label Classes="Solid Grey" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}" CommandParameter="Grey" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    熄灯
+                </Label>
+                <Label Classes="Solid Cyan" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}" CommandParameter="Cyan" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    青色
+                </Label>
+                <Label Classes="Solid Green" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}" CommandParameter="Green" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    绿色
+                </Label>
+            </WrapPanel>
+        </Grid>
+
+        <Grid Grid.Row="3" Margin="8,0">
+            <Border IsVisible="{Binding HasMessage}" Padding="10,8" Theme="{DynamicResource CardBorder}">
+                <TextBlock Text="{Binding StatusDisplayText}" TextWrapping="Wrap" Classes="Tertiary" />
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="4" Margin="8,4" IsVisible="{Binding ShowProgress}">
+            <Border Padding="10,8" Theme="{DynamicResource CardBorder}">
+                <StackPanel Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Grid.Column="0" Text="拣货进度" FontWeight="Bold" />
+                        <TextBlock Grid.Column="1">
+                            <Run Text="{Binding PickedItemCount}" />/<Run Text="{Binding TotalItemCount}" />
+                        </TextBlock>
+                    </Grid>
+                    <ProgressBar Value="{Binding ProgressPercentage}" Maximum="100" Height="8" />
+                    <WrapPanel ItemSpacing="8" IsVisible="{Binding HasIllegalItems}">
+                        <Label Classes="Solid Red" Theme="{StaticResource TagLabel}">
+                            <TextBlock>
+                                <Run Text="非法出库: " />
+                                <Run Text="{Binding IllegalItemCount}" />
+                            </TextBlock>
+                        </Label>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="5" Margin="8,0" IsVisible="{Binding IsPicking}">
+            <Border Padding="10,8" Theme="{DynamicResource CardBorder}" Background="#FFF0F9FF">
+                <TextBlock Text="拣货进行中，请从亮灯库位取出物料..."
+                           Classes="Tertiary"
+                           TextWrapping="Wrap" />
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="6" Height="0" />
+
+        <DataGrid Grid.Row="7"
+                  Margin="8"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True"
+                  HeadersVisibility="All"
+                  IsReadOnly="True"
+                  ItemsSource="{Binding GridData}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="3*" x:DataType="dto:InductionPickItem" Header="条码">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="dto:InductionPickItem">
+                            <SelectableTextBlock Margin="12,0" VerticalAlignment="Center" Text="{Binding BarNo}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="2*" x:DataType="dto:InductionPickItem" Header="数量">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="dto:InductionPickItem">
+                            <SelectableTextBlock Margin="12,0" VerticalAlignment="Center" Text="{Binding BarQty}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="3*" x:DataType="dto:InductionPickItem" Header="库位">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="dto:InductionPickItem">
+                            <SelectableTextBlock Margin="12,0" VerticalAlignment="Center" Text="{Binding BinNo}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="2*" x:DataType="dto:InductionPickItem" Header="状态">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="dto:InductionPickItem">
+                            <Label Theme="{StaticResource TagLabel}"
+                                   Content="{Binding StatusText}"
+                                   Classes.Solid="True"
+                                   Classes.Yellow="{Binding IsPending}"
+                                   Classes.Green="{Binding IsCompleted}"
+                                   Classes.Red="{Binding IsIllegalStatus}"
+                                   Classes.Grey="{Binding IsUnknownStatus}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

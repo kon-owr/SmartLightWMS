@@ -1,0 +1,176 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
+             xmlns:vm="using:WMSApp.ViewModels"
+             xmlns:dto="using:WMSApp.DTO"
+             mc:Ignorable="d"
+             d:DesignHeight="914"
+             d:DesignWidth="411"
+             HorizontalContentAlignment="Stretch"
+             VerticalContentAlignment="Stretch"
+             x:Class="WMSApp.Views.InductionEntryView"
+             x:DataType="vm:InductionEntryViewModel">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*">
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*">
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Margin="10,0"
+                       Text="料架号："
+                       Classes="Tertiary"
+                       FontSize="17" />
+            <TextBox x:Name="ShelfBox"
+                     Grid.Column="1"
+                     Margin="0,0,8,0"
+                     Text="{Binding InputShelf}"
+                     KeyDown="ShelfBox_OnKeyDown"
+                     Watermark="请输入感应料架号" />
+        </Grid>
+
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,*" IsVisible="{Binding CanInputBarcode}">
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Margin="10,0"
+                       Text="条码："
+                       Classes="Tertiary"
+                       FontSize="17" />
+            <TextBox x:Name="BarcodeBox"
+                     Grid.Column="1"
+                     Margin="0,0,8,0"
+                     Text="{Binding InputBarcode}"
+                     IsEnabled="{Binding CanInputBarcode}"
+                     KeyDown="BarcodeBox_OnKeyDown"
+                     Watermark="请扫描条码" />
+        </Grid>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Right" ColumnDefinitions="Auto,Auto,Auto" Margin="8">
+            <Button Grid.Column="0"
+                    Margin="0,0,8,0"
+                    Content="验证料架"
+                    Classes="Primary"
+                    Command="{Binding ValidateShelfCommand}"
+                    IsEnabled="{Binding CanValidateShelf}"
+                    Theme="{StaticResource SolidButton}" />
+            <Button Grid.Column="1"
+                    Margin="0,0,8,0"
+                    Content="取消入库"
+                    Classes="Danger"
+                    Command="{Binding CancelDepositCommand}"
+                    IsVisible="{Binding IsWaitingDeposit}"
+                    Theme="{StaticResource SolidButton}" />
+            <Button Grid.Column="2"
+                    Margin="0,0,8,0"
+                    Content="重置"
+                    Classes="Secondary"
+                    Command="{Binding ResetAllCommand}"
+                    Theme="{StaticResource SolidButton}" />
+        </Grid>
+
+        <Grid Grid.Row="3" Margin="8,0">
+            <Border IsVisible="{Binding HasMessage}" Padding="10,8" Theme="{DynamicResource CardBorder}">
+                <TextBlock Text="{Binding StatusDisplayText}" TextWrapping="Wrap" Classes="Tertiary" />
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="4" ColumnDefinitions="*">
+            <WrapPanel Grid.Column="0" ItemSpacing="4" Margin="10,0">
+                <Label Classes="Solid Grey" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}" CommandParameter="Grey" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    熄灯
+                </Label>
+                <Label Classes="Solid Green" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}" CommandParameter="Green" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    绿色
+                </Label>
+                <Label Classes="Solid Blue" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}" CommandParameter="Blue" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    蓝色
+                </Label>
+                <Label Classes="Solid Yellow" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}" CommandParameter="Yellow" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    黄色
+                </Label>
+                <Label Classes="Solid Cyan" Theme="{StaticResource TagLabel}" Cursor="Hand">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="Tapped">
+                            <ia:InvokeCommandAction Command="{Binding TagClickCommand}" CommandParameter="Cyan" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    青色
+                </Label>
+            </WrapPanel>
+        </Grid>
+
+        <Grid Grid.Row="5" Margin="8,0" IsVisible="{Binding CanInputBarcode}">
+            <Border Padding="10,8" Theme="{DynamicResource CardBorder}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="料架：" Classes="Tertiary" />
+                    <TextBlock Text="{Binding ValidatedShelfCode}" FontWeight="Bold" />
+                    <TextBlock Text="空库位：" Classes="Tertiary" Margin="16,0,0,0" />
+                    <TextBlock Text="{Binding EmptyLocationCount}" FontWeight="Bold" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <DataGrid Grid.Row="6"
+                  Margin="8"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True"
+                  HeadersVisibility="All"
+                  IsReadOnly="True"
+                  ItemsSource="{Binding GridData}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="3*" x:DataType="dto:DepositedItem" Header="条码">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="dto:DepositedItem">
+                            <SelectableTextBlock Margin="12,0" VerticalAlignment="Center" Text="{Binding BarNo}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="2*" x:DataType="dto:DepositedItem" Header="库位">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="dto:DepositedItem">
+                            <SelectableTextBlock Margin="12,0" VerticalAlignment="Center" Text="{Binding BinNo}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="2*" x:DataType="dto:DepositedItem" Header="时间">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="dto:DepositedItem">
+                            <SelectableTextBlock Margin="12,0"
+                                                 VerticalAlignment="Center"
+                                                 Text="{Binding DepositTime, StringFormat='{}{0:HH:mm:ss}'}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="1*" x:DataType="dto:DepositedItem" Header="状态">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="dto:DepositedItem">
+                            <Label Classes="Solid Green" Theme="{StaticResource TagLabel}" Content="已入库" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

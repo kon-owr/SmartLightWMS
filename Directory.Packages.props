@@ -1,0 +1,41 @@
+<Project>
+  <!-- https://learn.microsoft.com/en-us/nuget/consume-packages/central-package-management -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Avalonia packages -->
+    <!-- Important: keep version in sync! -->
+    <PackageVersion Include="Avalonia" Version="11.3.9" />
+    <PackageVersion Include="Avalonia.Controls.TreeDataGrid" Version="11.2.3" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.3.9" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.3.9" />
+    <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.9" />
+    <PackageVersion Include="Avalonia.Desktop" Version="11.3.9" />
+    <PackageVersion Include="Avalonia.iOS" Version="11.3.9" />
+    <PackageVersion Include="Avalonia.Browser" Version="11.3.9" />
+    <PackageVersion Include="Avalonia.Android" Version="11.3.9" />
+    <PackageVersion Include="Avalonia.Xaml.Interactions" Version="11.3.0.6" />
+    <PackageVersion Include="Avalonia.Xaml.Interactivity" Version="11.3.0.6" />
+    <PackageVersion Include="AvaloniaUI.Licensing" Version="3.0.4" />
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageVersion Include="Irihi.Avalonia.Shared" Version="0.3.1" />
+    <PackageVersion Include="Irihi.Avalonia.Shared.Contracts" Version="0.3.1" />
+    <PackageVersion Include="Irihi.Ursa" Version="1.14.0" />
+    <PackageVersion Include="Irihi.Ursa.Themes.Semi" Version="1.14.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.FileExtensions" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.11" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.11" />
+    <PackageVersion Include="Semi.Avalonia" Version="11.3.7.1" />
+    <PackageVersion Include="Semi.Avalonia.AvaloniaEdit" Version="11.2.0.1" />
+    <PackageVersion Include="Semi.Avalonia.ColorPicker" Version="11.3.7.1" />
+    <PackageVersion Include="Semi.Avalonia.DataGrid" Version="11.3.7.1" />
+    <PackageVersion Include="Semi.Avalonia.Dock" Version="11.3.6.2" />
+    <PackageVersion Include="Semi.Avalonia.TreeDataGrid" Version="11.2.0" />
+    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.15" />
+  </ItemGroup>
+</Project>

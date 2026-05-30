@@ -1,0 +1,229 @@
+﻿<UserControl
+    x:Class="WMSApp.Views.HomeView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Base"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:iri="https://irihi.tech/shared"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:WMSApp.ViewModels"
+    x:DataType="vm:HomeViewModel"
+    d:DesignHeight="914"
+    d:DesignWidth="360"
+    HorizontalContentAlignment="Stretch"
+    VerticalContentAlignment="Stretch"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <collections:AvaloniaList x:Key="CanvasPalette" x:TypeArguments="Color">
+                        <Color>#FFFDB7A5</Color>
+                        <Color>#FFF6A0B5</Color>
+                        <Color>#FFDD9BE0</Color>
+                        <Color>#FFC4A7E9</Color>
+                        <Color>#FFA7B3E1</Color>
+                        <Color>#FF98CDFD</Color>
+                        <Color>#FF95D8F8</Color>
+                    </collections:AvaloniaList>
+                    <LinearGradientBrush x:Key="TileTitleForeground">
+                        <GradientStop Offset="0.0" Color="#FFA20B48" />
+                        <GradientStop Offset="0.3" Color="#FF71168A" />
+                        <GradientStop Offset="0.6" Color="#FF46259E" />
+                        <GradientStop Offset="1.0" Color="#FF28348C" />
+                    </LinearGradientBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <collections:AvaloniaList x:Key="CanvasPalette" x:TypeArguments="Color">
+                        <Color>#FFB42019</Color>
+                        <Color>#FFA41751</Color>
+                        <Color>#FF731F8A</Color>
+                        <Color>#FF582EA0</Color>
+                        <Color>#FF29368E</Color>
+                        <Color>#FF135CB8</Color>
+                        <Color>#FF0366A9</Color>
+                    </collections:AvaloniaList>
+                    <LinearGradientBrush x:Key="TileTitleForeground">
+                        <GradientStop Offset="0.0" Color="#FFF7A8BC" />
+                        <GradientStop Offset="0.3" Color="#FFDDA0E1" />
+                        <GradientStop Offset="0.6" Color="#FFBEADE9" />
+                        <GradientStop Offset="1.0" Color="#FFA7B4E2" />
+                    </LinearGradientBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+            <ControlTheme x:Key="TileButton" TargetType="Button">
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="Padding" Value="24" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Border
+                            Padding="0"
+                            Classes="Hover"
+                            Cursor="Hand"
+                            Theme="{DynamicResource CardBorder}">
+                            <Border.Transitions>
+                                <Transitions>
+                                    <BrushTransition Property="BorderBrush" Duration="1" />
+                                </Transitions>
+                            </Border.Transitions>
+                            <ContentPresenter
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:pointerover /template/ Border">
+                    <Setter Property="BorderBrush" Value="{DynamicResource TileTitleForeground}" />
+                </Style>
+            </ControlTheme>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.Styles>
+        <Style Selector="TextBlock.TileTitle">
+            <Setter Property="FontWeight" Value="700" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Margin" Value="0 0 0 8" />
+            <Setter Property="Foreground" Value="{DynamicResource TileTitleForeground}" />
+        </Style>
+    </UserControl.Styles>
+    <Grid RowDefinitions="*, Auto">
+        <ScrollViewer>
+            <StackPanel>
+                <Grid
+                    Margin="0,80,0,10"
+                    HorizontalAlignment="Center"
+                    ColumnDefinitions="Auto"
+                    RowDefinitions="Auto, Auto">
+                    <TextBlock
+                        Grid.Row="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Classes="Secondary"
+                        FontSize="48"
+                        FontWeight="700"
+                        TextWrapping="Wrap"
+                        Text="智能亮灯货架" />
+                    <TextBlock
+                        Grid.Row="1"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        Classes="Secondary"
+                        FontSize="16"
+                        Text="Deerma 无线中心车间" />
+                </Grid>
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    Classes="Tertiary"
+                    FontSize="20"
+                    FontWeight="700"
+                    Text="{Binding AppVersionText}" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    Classes="Tertiary"
+                    FontSize="20"
+                    Text="Aesthetic Evolution of Productivity" />
+                <UniformGrid
+                    MaxWidth="810"
+                    Margin="24"
+                    HorizontalAlignment="Center"
+                    Columns="2">
+                    <Button
+                        Margin="8"
+                        Command="{Binding NavigateToPickingCodeCommand}"
+                        CommandParameter="semi"
+                        Theme="{DynamicResource TileButton}"
+                        AutomationProperties.AccessibilityView="Raw"
+                        >
+                        <StackPanel HorizontalAlignment="Left">
+                            <TextBlock Classes="TileTitle" Text="出库亮灯" />
+                            <StackPanel Orientation="Horizontal" Margin="0 0 0 8">
+                                <Label Theme="{DynamicResource TagLabel}" Classes="Blue Ghost">Open Source</Label>
+                            </StackPanel>
+                            <TextBlock Text="领料出库条码亮灯" />
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        Margin="8"
+                        Command="{Binding NavigateToEntryCodeCommand}"
+                        CommandParameter="ursa"
+                        Theme="{DynamicResource TileButton}"
+                        AutomationProperties.AccessibilityView="Raw">
+                        <StackPanel HorizontalAlignment="Left">
+                            <TextBlock Classes="TileTitle" Text="入库亮灯" />
+                            <StackPanel Orientation="Horizontal" Margin="0 0 0 8">
+                                <Label Theme="{DynamicResource TagLabel}" Classes="Blue Ghost">Open Source</Label>
+                            </StackPanel>
+                            <TextBlock Text="领料入库库位亮灯" />
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        Margin="8"
+                        Command="{Binding NavigateToInductionEntryCommand}"
+                        CommandParameter="mantra"
+                        Theme="{DynamicResource TileButton}"
+                        AutomationProperties.AccessibilityView="Raw">
+                        <StackPanel HorizontalAlignment="Left">
+                            <TextBlock Classes="TileTitle" Text="车间入库" />
+                            <StackPanel Orientation="Horizontal" Margin="0 0 0 8">
+                                <Label Theme="{DynamicResource TagLabel}" Classes="Purple Ghost">Commercial</Label>
+                            </StackPanel>
+                            <TextBlock Text="感应式入库" />
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        Margin="8"
+                        Command="{Binding NavigateToInductionPickCommand}"
+                        CommandParameter="huska"
+                        Theme="{DynamicResource TileButton}"
+                        AutomationProperties.AccessibilityView="Raw">
+                        <StackPanel HorizontalAlignment="Left">
+                            <TextBlock Classes="TileTitle" Text="车间出库" />
+                            <StackPanel Orientation="Horizontal" Margin="0 0 0 8">
+                                <Label Theme="{DynamicResource TagLabel}" Classes="Purple Ghost">Commercial</Label>
+                            </StackPanel>
+                            <TextBlock Text="感应式出库" />
+                        </StackPanel>
+                    </Button>
+                </UniformGrid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border
+            Margin="24"
+            Padding="20"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsVisible="{Binding IsUpdatePromptVisible}"
+            MaxWidth="520"
+            Theme="{DynamicResource CardBorder}">
+            <StackPanel Spacing="12">
+                <TextBlock
+                    FontSize="22"
+                    FontWeight="700"
+                    Text="{Binding UpdatePromptTitle}" />
+                <TextBlock
+                    TextWrapping="Wrap"
+                    Text="{Binding UpdatePromptMessage}" />
+                <StackPanel
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    Spacing="12">
+                    <Button
+                        Command="{Binding CancelUpdatePromptCommand}"
+                        Content="取消"
+                        IsVisible="{Binding ShowUpdateCancelButton}" />
+                    <Button
+                        Classes="Accent"
+                        Command="{Binding DownloadUpdateCommand}"
+                        Content="立即下载" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

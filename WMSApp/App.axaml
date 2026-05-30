@@ -1,0 +1,24 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:WMSApp"
+             xmlns:semi="https://irihi.tech/semi"
+             xmlns:u-semi="https://irihi.tech/ursa/themes/semi"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             x:Class="WMSApp.App"
+             RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme/>
+        <semi:ColorPickerSemiTheme />
+        <semi:DataGridSemiTheme />
+        <semi:DockSemiTheme />
+        <semi:AvaloniaEditSemiTheme />
+        <semi:SemiTheme Locale="zh-CN" />
+        <u-semi:SemiTheme Locale="zh-CN"/>
+    </Application.Styles>
+</Application>

@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <Version>1.0.13</Version>
+    <InformationalVersion>$(Version)</InformationalVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+    <!-- Release 濡€崇础娑撳秷绶崙?Avalonia.Diagnostics閿涘矂浼╅崗宥堢槚閺傤厼瀵樻潻娑樺弳濮濓絽绱＄€瑰顥婇崠鍛偓?-->
+    <PackageReference Include="Avalonia.Diagnostics">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Avalonia.Xaml.Interactions" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" />
+    <PackageReference Include="AvaloniaUI.Licensing" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Irihi.Avalonia.Shared" />
+    <PackageReference Include="Irihi.Avalonia.Shared.Contracts" />
+    <PackageReference Include="Irihi.Ursa" />
+    <PackageReference Include="Irihi.Ursa.Themes.Semi" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
+    <PackageReference Include="Semi.Avalonia" />
+    <PackageReference Include="Semi.Avalonia.AvaloniaEdit" />
+    <PackageReference Include="Semi.Avalonia.ColorPicker" />
+    <PackageReference Include="Semi.Avalonia.DataGrid" />
+    <PackageReference Include="Semi.Avalonia.Dock" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Views\PickingCodeView.axaml.cs">
+      <DependentUpon>PickingCodeView.axaml</DependentUpon>
+    </Compile>
+    <!-- 鐏忓棛骞嗘晶鍐帳缂冾喖绁甸崗銉р柤鎼村繘娉﹂敍灞肩返濡楀矂娼扮粩顖氭儙閸斻劑妯佸▓鍨瘻閻滎垰顣ㄩ崝鐘烘祰閵?-->
+    <EmbeddedResource Include="appsettings.json" />
+    <EmbeddedResource Include="appsettings.Development.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\Fonts\" />
+  </ItemGroup>
+</Project>

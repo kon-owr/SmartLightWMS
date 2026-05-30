@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="WMSApp.Android/WMSApp.Android.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+  <Project Path="WMSApp.Browser/WMSApp.Browser.csproj" />
+  <Project Path="WMSApp.Desktop/WMSApp.Desktop.csproj" />
+  <Project Path="WMSApp.iOS/WMSApp.iOS.csproj" />
+  <Project Path="WMSApp/WMSApp.csproj" />
+</Solution>

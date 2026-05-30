@@ -1,0 +1,103 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:WMSApp.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:u="https://irihi.tech/ursa"
+            xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Base"
+    xmlns:views="using:WMSApp.Views"
+        mc:Ignorable="d"     
+        d:DesignHeight="914"
+        d:DesignWidth="411"
+        HorizontalContentAlignment="Stretch"
+        VerticalContentAlignment="Stretch"
+        x:Class="WMSApp.Views.MainView"
+        x:DataType="vm:MainViewModel">
+        <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <collections:AvaloniaList x:Key="CanvasPalette" x:TypeArguments="Color">
+                        <Color>#FFFDB7A5</Color>
+                        <Color>#FFF6A0B5</Color>
+                        <Color>#FFDD9BE0</Color>
+                        <Color>#FFC4A7E9</Color>
+                        <Color>#FFA7B3E1</Color>
+                        <Color>#FF98CDFD</Color>
+                        <Color>#FF95D8F8</Color>
+                    </collections:AvaloniaList>
+                    <LinearGradientBrush x:Key="TileTitleForeground">
+                        <GradientStop Offset="0.0" Color="#FFA20B48" />
+                        <GradientStop Offset="0.3" Color="#FF71168A" />
+                        <GradientStop Offset="0.6" Color="#FF46259E" />
+                        <GradientStop Offset="1.0" Color="#FF28348C" />
+                    </LinearGradientBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <collections:AvaloniaList x:Key="CanvasPalette" x:TypeArguments="Color">
+                        <Color>#FFB42019</Color>
+                        <Color>#FFA41751</Color>
+                        <Color>#FF731F8A</Color>
+                        <Color>#FF582EA0</Color>
+                        <Color>#FF29368E</Color>
+                        <Color>#FF135CB8</Color>
+                        <Color>#FF0366A9</Color>
+                    </collections:AvaloniaList>
+                    <LinearGradientBrush x:Key="TileTitleForeground">
+                        <GradientStop Offset="0.0" Color="#FFF7A8BC" />
+                        <GradientStop Offset="0.3" Color="#FFDDA0E1" />
+                        <GradientStop Offset="0.6" Color="#FFBEADE9" />
+                        <GradientStop Offset="1.0" Color="#FFA7B4E2" />
+                    </LinearGradientBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+            <ControlTheme x:Key="TileButton" TargetType="Button">
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="Padding" Value="24" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Border
+                            Padding="0"
+                            Classes="Hover"
+                            Cursor="Hand"
+                            Theme="{DynamicResource CardBorder}">
+                            <Border.Transitions>
+                                <Transitions>
+                                    <BrushTransition Property="BorderBrush" Duration="1" />
+                                </Transitions>
+                            </Border.Transitions>
+                            <ContentPresenter
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:pointerover /template/ Border">
+                    <Setter Property="BorderBrush" Value="{DynamicResource TileTitleForeground}" />
+                </Style>
+            </ControlTheme>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" Height="40" 
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
+          <Button Command="{Binding GoBackCommand}"
+                IsVisible="{Binding ShowBackButton}" 
+                HorizontalAlignment="Left"
+                Margin="10,0"
+                Content="← 返回" />   
+
+        </Grid>
+        <!--切换页面容器-->
+        <ContentControl Grid.Row="1" Content="{Binding CurrentPage}"/>
+        <u:OverlayDialogHost Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"/>
+    </Grid>
+</UserControl>
